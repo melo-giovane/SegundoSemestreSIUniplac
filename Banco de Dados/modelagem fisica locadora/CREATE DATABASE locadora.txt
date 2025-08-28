@@ -1,0 +1,78 @@
+CREATE DATABASE locadora
+
+USE locadora;
+CREATE TABLE clientes (
+  id_cliente INT PRIMARY KEY NOT NULL auto_increment,
+  nome VARCHAR(50) NOT NULL,
+  cpf VARCHAR(11) NOT NULL,
+  cnh VARCHAR(9) NOT NULL,
+  venc_cnh DATE NOT NULL  
+)
+
+CREATE TABLE reservas(
+  id_reserva INT PRIMARY KEY NOT NULL auto_increment,
+  id_cliente INT NOT NULL,
+  constraint fk_reserva_cliente
+	FOREIGN KEY (id_cliente)
+    REFERENCES clientes(id_cliente),
+  id_veiculo INT NOT NULL,
+  id_funcionario INT NOT NULL,
+  valor_diaria DECIMAL(10,2) NOT NULL,
+  data_inicio DATE NOT NULL,
+  data_fim DATE NOT NULL
+)
+
+CREATE TABLE categorias(
+  id_categoria INT PRIMARY KEY NOT NULL auto_increment,
+  descricao VARCHAR(50)
+)
+
+CREATE TABLE cargos(
+  id_cargo INT PRIMARY KEY NOT NULL auto_increment,
+  descricao VARCHAR(50)
+)
+
+
+CREATE TABLE funcionarios(
+  id_funcionario INT PRIMARY KEY NOT NULL auto_increment,
+  id_cargo INT NOT NULL,
+	constraint fk_funcionario_cargo
+	FOREIGN KEY (id_cargo)
+    REFERENCES cargos(id_cargo),
+  telefone VARCHAR(11),
+  endereco VARCHAR(50),
+  nome VARCHAR(50) NOT NULL,
+  data_nasc DATE NOT NULL,
+  cpf VARCHAR(11)
+)
+ 
+CREATE TABLE veiculos(
+  id_veiculo INT PRIMARY KEY NOT NULL auto_increment,
+  km_atual VARCHAR(6),
+  proxima_revisao DATE NOT NULL,
+  marca VARCHAR(30) NOT NULL,
+  modelo VARCHAR(30) NOT NULL,
+  cor VARCHAR(15) NOT NULL,
+  id_categoria INT NOT NULL,
+	CONSTRAINT fk_veiculo_categoria
+    FOREIGN KEY (id_categoria)
+    REFERENCES categorias(id_categoria),
+  ano_fabricacao YEAR,
+  ano_modelo YEAR
+)
+
+ALTER TABLE reservas
+ADD CONSTRAINT fk_reserva_cliente
+FOREIGN KEY (id_cliente)
+REFERENCES clientes(id_cliente);
+
+ALTER TABLE reservas
+ADD CONSTRAINT fk_reserva_funcionario
+FOREIGN KEY (id_funcionario)
+REFERENCES funcionarios(id_funcionario);
+
+
+ALTER TABLE reservas
+ADD CONSTRAINT fk_reserva_veiculo
+FOREIGN KEY (id_veiculo)
+REFERENCES veiculos(id_veiculo);
