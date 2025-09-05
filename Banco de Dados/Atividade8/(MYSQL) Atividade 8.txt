@@ -1,0 +1,74 @@
+create database Atividade_7;
+use Atividade_7;
+
+create table tb_departamento (
+  id_departamento int primary key auto_increment,
+  descricao_depto varchar(50) not null
+  );
+
+create table tb_funcionarios (
+  id_funcionario int primary key auto_increment,
+  nome varchar(30) not null,
+  cpf varchar(11) not null,
+  departamento_id int,
+  constraint fk_funcionario_departamento
+	foreign key (departamento_id)
+	references tb_departamento(id_departamento)
+  );
+  
+create table tb_projetos (
+  id_projeto int primary key auto_increment,
+  descricao_projeto varchar(50) not null
+  );
+  
+create table tb_projeto_empregado (
+  id_projeto_empregado int primary key auto_increment,
+  data_incio date,
+  data_fim date,
+  funcionario_id int,
+    constraint fk_projeto_funcionario
+    foreign key (funcionario_id) references tb_funcionarios(id_funcionario),
+  projeto_id int,
+    constraint fk_projeto_empregado_projetos
+    foreign key (projeto_id) references tb_projetos(id_projeto)
+  );
+
+
+alter table tb_funcionarios
+  add comissao decimal(12,2),
+  add documento varchar(20) not null,
+  drop column cpf,
+  add genero varchar(15);
+
+alter table tb_departamento rename column descricao_depto to nome_depto;
+alter table tb_departamento modify nome_depto varchar(50);
+alter table tb_funcionarios modify nome varchar(50);
+
+insert into tb_departamento (nome_depto) values ("Estoque"),("Compras"),("Logística"),("Administrativo"),("Financeiro");
+insert into tb_funcionarios (nome, documento, departamento_id, comissao) values
+	("Teodoro Melo", "98392928383", 1, 3500.00), ("Mariana Dutra", "85757575754", 1, 4200.50), ("Giovane Melo", "09385409848", 1, 5000.00), ("Maria Liz", "93847384838", 1, 3100.75),
+	("Carlos Alberto", "09834020939", 2, 2700.00), ("Fernanda Lima", "32984793282", 2, 3300.25), ("Ricardo Santos", "34198273483", 2, 2900.90), ("Juliana Costa", "12312434534", 2, 3600.00),
+    ("Marcelo Oliveira", "12312312321", 3, 4100.40), ("Patrícia Souza", "33455443343", 3, 2800.00),	("Gabriel Martins", "20120110232", 3, 3200.50), ("Amanda Ferreira", "03929854713", 3, 2950.00),
+    ("Felipe Rocha", "35443253412", 4, 3800.75), ("Beatriz Carvalho", "12353454672", 4, 3400.00), ("Lucas Mendes", "53445634234", 4, 2700.00), ("Tatiane Nunes", "76535275654", 4, 4500.00),
+    ("Eduardo Gonçalves", "12343524367", 5, 3700.00), ("Mariana Ribeiro", "76465354765", 5, 4100.50), ("André Silva", "75632476545", 5, 2850.00), ("Camila Fernandes", "64534556754", 5, 3250.00);
+    
+insert into tb_projetos (descricao_projeto) values ("Sistema de gestao financeira"),("Aplicativo de vendas"),("Plataforma de RH"),("Projeto de expansão regional"),("Automação de relatórios");
+
+insert into tb_projeto_empregado (data_incio, data_fim, funcionario_id, projeto_id) values
+    ('2025-01-10', '2025-06-30', 1, 1), ('2025-01-15', '2025-06-30', 2, 1), ('2025-01-20', '2025-06-30', 3, 1),
+    ('2025-02-01', '2025-07-15', 4, 2), ('2025-02-05', '2025-07-15', 5, 2), ('2025-02-10', '2025-07-15', 6, 2),
+    ('2025-03-01', '2025-08-30', 7, 3), ('2025-03-05', '2025-08-30', 8, 3), ('2025-03-10', '2025-08-30', 9, 3),
+    ('2025-04-01', '2025-09-15', 10, 4), ('2025-04-05', '2025-09-15', 11, 4), ('2025-04-10', '2025-09-15', 12, 4),
+    ('2025-05-01', '2025-10-31', 13, 5), ('2025-05-05', '2025-10-31', 14, 5), ('2025-05-10', '2025-10-31', 15, 5);
+    
+update tb_funcionarios 
+set comissao=comissao*1.15 
+where departamento_id=1;
+
+delete from tb_projeto_empregado
+where projeto_id = 2;
+    
+delete from tb_projetos
+where id_projeto = 2;
+
+#drop database Atividade_7;
